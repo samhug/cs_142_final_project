@@ -1,4 +1,6 @@
-cs_141_final_project
-====================
+TCC CS 141 Final Project
+========================
 
-A basic Pong clone for my CS 141 Java final project
+<br>
+> ## Project Description
+>> This is a basic Pong clon.
