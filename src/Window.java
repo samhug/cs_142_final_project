@@ -17,11 +17,14 @@ public class Window extends JFrame
     	
     	setTitle(title);
     	
+        // Add the drawing panel to the window
     	mainPanel = new WindowPanel(painter, width, height);
     	mainPanel.setBackground(new Color(0, 0, 0, 255));
     	
+        // Make our window visible
     	setVisible(true);
     	
+        // When the window exists so does the program
     	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	
     	keyboard = new Keyboard(this);
@@ -31,6 +34,9 @@ public class Window extends JFrame
         pack();
     }
     
+    /**
+     * This is the main panel for the window where everything gets drawn.
+     */
     protected class WindowPanel extends JPanel {
 
         private Painter painter;
@@ -54,16 +60,28 @@ public class Window extends JFrame
     
 	public class Keyboard {
 		
+        /**
+         * These variables hold all the registered event hooks.
+         */
 		private HashMap<Integer, ArrayList<KeyEventInterface>> keyTypeHooks;
 		private HashMap<Integer, ArrayList<KeyEventInterface>> keyPressHooks;
 		private HashMap<Integer, ArrayList<KeyEventInterface>> keyReleaseHooks;
 		
+        /**
+         * Initializes the hook arrays and registers our callbacks with the given
+         * window's keyboard events.
+         *
+         * @param window The window to listen for keyboard events in.
+         */
 		public Keyboard(JFrame window) {
 			
 			keyTypeHooks    = new HashMap<Integer, ArrayList<KeyEventInterface>>();
 			keyPressHooks   = new HashMap<Integer, ArrayList<KeyEventInterface>>();
 			keyReleaseHooks = new HashMap<Integer, ArrayList<KeyEventInterface>>();
 			
+            /**
+             * Initialize the keyboard listener and register our event callbacks.
+             */
 			KeyListener listener = new KeyListener() {
 
 				@Override
@@ -82,6 +100,14 @@ public class Window extends JFrame
 					executeHooks(keyReleaseHooks, e);
 				}
 				
+                /**
+                 * Given a list of event hooks and a key event this method iterates
+                 * through the hooks calling its `on_key` callback with the key event
+                 * as a parameter.
+                 *
+                 * @param hookMap   The hooks to execute
+                 * @param e         The keyboard event
+                 */
 				private void executeHooks(HashMap<Integer, ArrayList<KeyEventInterface>> hookMap, KeyEvent e) {
 					if (hookMap.containsKey(e.getKeyCode())) {
 						
@@ -92,6 +118,7 @@ public class Window extends JFrame
 				}
 			};
 			
+            // Adds our listener to the window
 			window.addKeyListener(listener);
 		}
 		
@@ -116,6 +143,9 @@ public class Window extends JFrame
 		}
 	}
 	
+    /**
+     * This iterface is used by objects interested in a keyboard event.
+     */
 	public interface KeyEventInterface {
 		public void on_key(KeyEvent e);
 	}
