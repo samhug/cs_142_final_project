@@ -3,11 +3,11 @@ import java.awt.Point;
 
 
 public class Paddle extends GameObject {
-	
-	public Paddle(Point initial_position) {
-		
-		// Call super constructor
-		super();
+    
+    public Paddle(Point initial_position) {
+        
+        // Call super constructor
+        super();
 
         position = initial_position;
 
@@ -17,15 +17,15 @@ public class Paddle extends GameObject {
             System.out.println("Error: Unable to load paddle sprite.");
             System.exit(1);
         }
-	}
-	
-	public void moveUp(int amount) {
-		position.y -= amount;
+    }
+    
+    public void moveUp(int amount) {
+        position.y -= amount;
         onUpdateSignal.signal();
-	}
-	
-	public void moveDown(int amount) {
-		position.y += amount;
+    }
+    
+    public void moveDown(int amount) {
+        position.y += amount;
         onUpdateSignal.signal();
-	}
+    }
 }

@@ -5,30 +5,30 @@ import java.awt.Graphics;
  * This is the game engine base class.
  */
 public class Engine implements Window.Painter {
-	
+    
     // Default game window dimensions
-	final int DEFAULT_WINDOW_WIDTH  = 800;
-	final int DEFAULT_WINDOW_HEIGHT = 600;
-	
-	protected Window window;
+    final int DEFAULT_WINDOW_WIDTH  = 800;
+    final int DEFAULT_WINDOW_HEIGHT = 600;
+    
+    protected Window window;
 
     // Holds objects registered with the engine
-	private ArrayList<GameObject> objects;
-	
+    private ArrayList<GameObject> objects;
+    
 
     /**
      * Initialize the game window and the objects array
      *
      * @param name The title of our game.
      */
-	public Engine(String name) {
-		
-		// Initialize the game window
-		window = new Window(name, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, this);
-		
-		// Initialize game object list
-		objects = new ArrayList<GameObject>();
-	}
+    public Engine(String name) {
+        
+        // Initialize the game window
+        window = new Window(name, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, this);
+        
+        // Initialize game object list
+        objects = new ArrayList<GameObject>();
+    }
     
     /**
      * This method is called when the window needs to repaint
@@ -42,19 +42,19 @@ public class Engine implements Window.Painter {
          * Iterate through all the registered objects and render each of them
          * to the graphics context.
          */
-		for (GameObject obj: objects) {
-			obj.render(graphics);
-		}
+        for (GameObject obj: objects) {
+            obj.render(graphics);
+        }
     }
 
-	/**
-	 * Registers an object with the game engine
-	 * 
-	 * @param object The object to register
-	 * @return The registered object
-	 */
-	protected GameObject addObject(GameObject object) {
-		objects.add(object);
+    /**
+     * Registers an object with the game engine
+     * 
+     * @param object The object to register
+     * @return The registered object
+     */
+    protected GameObject addObject(GameObject object) {
+        objects.add(object);
 
         /**
          * Subscribe to the objects update signal and when the object updates,
@@ -68,6 +68,6 @@ public class Engine implements Window.Painter {
             }
         });
 
-		return object;
-	}
+        return object;
+    }
 }
