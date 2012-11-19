@@ -4,14 +4,19 @@ import java.awt.Point;
 
 public class Paddle extends GameObject {
 	
-	public Paddle(Point initial_position) throws IOException {
+	public Paddle(Point initial_position) {
 		
 		// Call super constructor
 		super();
 
         position = initial_position;
 
-		setSprite(new Sprite("paddle.png"));
+        try {
+            setSprite(new Sprite("paddle.png"));
+        } catch (IOException e) {
+            System.out.println("Error: Unable to load paddle sprite.");
+            System.exit(1);
+        }
 	}
 	
 	public void moveUp(int amount) {

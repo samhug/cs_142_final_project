@@ -16,7 +16,7 @@ public class FinalProject extends Engine
 	private Paddle paddle_2;
 	//private Ball ball;
 	
-    public FinalProject() throws IOException {
+    public FinalProject() {
     	
     	// Call the engine's super constructor 
 		super("Pong");
@@ -58,7 +58,7 @@ public class FinalProject extends Engine
 
 	}
 
-	public static void main(String[] args) throws IOException
+	public static void main(String[] args)
     {
 		new FinalProject();
     }
