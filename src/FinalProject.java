@@ -1,65 +1,35 @@
 import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.awt.Point;
 
-/**
- * TCC CS 141 Final Project
- */
 public class FinalProject extends Engine
 {
 
-    // The initial positions for the paddles
-    private final Point PLAYER_1_START_POSITION = new Point(10, 10);
-    private final Point PLAYER_2_START_POSITION = new Point(750, 10);
+	private static final GameObject.Point PLAYER_1_START_POSITION = new GameObject.Point(10, 10);
+    private static final GameObject.Point PLAYER_2_START_POSITION = new GameObject.Point(750, 10);
 
-    private Paddle paddle_1;
-    private Paddle paddle_2;
-    //private Ball ball;
-    
+	private Paddle paddle_1;
+	private Paddle paddle_2;
+	//private Ball ball;
+	
+	/**
+	 * Constructor
+	 */
     public FinalProject() {
-        
-        // Call the engine's super constructor 
-        super("Pong");
-        
-        // Initialize player1's paddle
-        paddle_1 = (Paddle)addObject(new Paddle(PLAYER_1_START_POSITION));
-        
-        // Setup player1's keyboard controls
-        window.keyboard.onKeyPress(KeyEvent.VK_UP, new Window.KeyEventInterface() {
-            @Override
-            public void on_key(KeyEvent e) {
-                paddle_1.moveUp(10);
-            }
-        });
-        window.keyboard.onKeyPress(KeyEvent.VK_DOWN, new Window.KeyEventInterface() {
-            @Override
-            public void on_key(KeyEvent e) {
-                paddle_1.moveDown(10);
-            }
-        });
+		super("Pong");
+	}
+	
+    
+    public void initialize() {
+    	
+		// Initialize Player paddles
+		paddle_1 = new Paddle(PLAYER_1_START_POSITION, KeyEvent.VK_UP, KeyEvent.VK_DOWN);
+		paddle_2 = new Paddle(PLAYER_2_START_POSITION, KeyEvent.VK_Q,  KeyEvent.VK_A);
 
+		// Register the paddles with the game engine
+		addObject(paddle_1);
+		addObject(paddle_2);
+	}
 
-        // Initialize player2's paddle
-        paddle_2 = (Paddle)addObject(new Paddle(PLAYER_2_START_POSITION));
-
-        // Setup player2's keyboard controls
-        window.keyboard.onKeyPress(KeyEvent.VK_Q, new Window.KeyEventInterface() {
-            @Override
-            public void on_key(KeyEvent e) {
-                paddle_2.moveUp(10);
-            }
-        });
-        window.keyboard.onKeyPress(KeyEvent.VK_A, new Window.KeyEventInterface() {
-            @Override
-            public void on_key(KeyEvent e) {
-                paddle_2.moveDown(10);
-            }
-        });
-
-    }
-
-    public static void main(String[] args)
-    {
-        new FinalProject();
+	public static void main(String[] args) {
+		new FinalProject();
     }
 }

@@ -1,73 +1,73 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.awt.Graphics;
+import java.util.EventObject;
 
-/**
- * This is the game engine base class.
- */
-public class Engine implements Window.Painter {
+import javax.swing.Timer;
+
+public abstract class Engine extends events.EventHandler {
+	
+	final static int DEFAULT_WINDOW_WIDTH  = 800;
+	final static int DEFAULT_WINDOW_HEIGHT = 600;
+	final static int DEFAULT_FRAME_RATE	   = 60; // N_UPDATES / Second
+	
+	protected Window window;
+	private ArrayList<GameObject> objects;
+	
+	public Engine(String name) {
+		
+		// Initialize the game window
+		window = new Window(this, name, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+		
+		// Initialize game object list
+		objects = new ArrayList<GameObject>();
+		
+		initTimer();
+
+		// Call the sub-class' initialization method.
+		initialize();
+		
+		// Trigger initial window paint
+		window.invalidate();
+	}
+	
+	private void initTimer() {
+		// Number of milliseconds between frames
+		int delay = 1000 / DEFAULT_FRAME_RATE; //milliseconds
+		
+		
+		// !!!!!! Awful hack to break the scope of the "this" keyword .... !!!!!!
+		final Engine _engine = this;
+		
+		ActionListener timerListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispatchEvent(new UpdateEvent(_engine));
+			}
+		};
+		new Timer(delay, timerListener).start();
+	}
+	
+	/**
+	 * Holds initialization for objects.
+	 */
+	protected abstract void initialize();
     
-    // Default game window dimensions
-    final int DEFAULT_WINDOW_WIDTH  = 800;
-    final int DEFAULT_WINDOW_HEIGHT = 600;
-    
-    protected Window window;
+	/**
+	 * Registers an object with the game engine
+	 * 
+	 * @param object The object to register
+	 * @return The registered object
+	 */
+	protected GameObject addObject(GameObject object) {
+		objects.add(object);
 
-    // Holds objects registered with the engine
-    private ArrayList<GameObject> objects;
-    
-
-    /**
-     * Initialize the game window and the objects array
-     *
-     * @param name The title of our game.
-     */
-    public Engine(String name) {
-        
-        // Initialize the game window
-        window = new Window(name, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, this);
-        
-        // Initialize game object list
-        objects = new ArrayList<GameObject>();
-    }
-    
-    /**
-     * This method is called when the window needs to repaint
-     * the objects.
-     *
-     * @param graphics The graphics context to use.
-     */
-    public void on_paint(Graphics graphics) {
-
-        /**
-         * Iterate through all the registered objects and render each of them
-         * to the graphics context.
-         */
-        for (GameObject obj: objects) {
-            obj.render(graphics);
-        }
-    }
-
-    /**
-     * Registers an object with the game engine
-     * 
-     * @param object The object to register
-     * @return The registered object
-     */
-    protected GameObject addObject(GameObject object) {
-        objects.add(object);
-
-        /**
-         * Subscribe to the objects update signal and when the object updates,
-         * trigger a window repaint.
-         *
-         * TODO: Maybe we could repaint only the area effected by the update.
-         */
-        object.onUpdateSignal.add_hook(new Signal.Hook() {
-            public void on_signal() {
-                window.repaint();
-            }
-        });
-
-        return object;
+		object.register(this);
+		
+		return object;
+	}
+	
+    public static class UpdateEvent extends events.Event {
+		public UpdateEvent(Object source) { super(source); }
     }
 }
