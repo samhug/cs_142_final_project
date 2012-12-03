@@ -9,7 +9,7 @@ public class FinalProject extends Engine {
 	private static final String NAME = "Pong";
 
 	// The number of players to use.
-	private static final int N_PLAYERS = 5;
+	private static final int N_PLAYERS = 3;
 
 	// Predefined list of keys to assign to players.
 	private static final int[][] PLAYER_KEYS = {

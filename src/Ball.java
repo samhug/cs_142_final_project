@@ -10,7 +10,7 @@ import engine.ShapeSprite;
 public class Ball extends GameObject {
 
 	// The initial speed of the ball measured in `units/second`
-	final static double INITIAL_SPEED = 1.5;
+	final static double INITIAL_SPEED = 10;
 
 	// The size of the ball
 	final static double WIDTH = 0.5;
