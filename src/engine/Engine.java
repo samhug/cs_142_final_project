@@ -40,12 +40,12 @@ public abstract class Engine {
 		
 		// Initialize game object list
 		objects = new ArrayList<GameObject>();
+	}
 
+	protected void initialize() {
+		
 		initTimer();
-
-		// Call the sub-class' initialization method.
-		initialize();
-
+		
 		// When the Escape key is pressed exit the game
 		eh.addEventListener(Window.Keyboard.KeyPressEvent.class,
 				new Window.Keyboard.KeyboardListener(KeyEvent.VK_ESCAPE) {
@@ -70,8 +70,9 @@ public abstract class Engine {
 		
 		// Trigger initial window paint
 		window.repaint();
+		
 	}
-
+	
 	private void initTimer() {
 		// Number of milliseconds between frames
 		int delay = 1000 / FRAME_RATE; // milliseconds
@@ -94,11 +95,6 @@ public abstract class Engine {
 		};
 		new Timer(delay, timerListener).start();
 	}
-
-	/**
-	 * Holds initialization for objects.
-	 */
-	protected abstract void initialize();
 
 	protected abstract void onUpdate(long tick);
 	

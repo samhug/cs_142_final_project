@@ -2,6 +2,8 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.util.EventObject;
 
+import javax.swing.JOptionPane;
+
 import engine.CollisionEngine;
 import engine.CollisionEngine.CollisionEvent;
 import engine.Engine;
@@ -10,9 +12,6 @@ public class FinalProject extends Engine {
 
 	// The name of the game.
 	private static final String NAME = "Pong";
-
-	// The number of players to use.
-	private static final int N_PLAYERS = 10;
 
 	// Predefined list of keys to assign to players.
 	private static final int[][] PLAYER_KEYS = {
@@ -66,6 +65,10 @@ public class FinalProject extends Engine {
 	private static final Point2D BALL_START_POSITION
 				= new Point2D.Double(0, 0); // Center of screen
 
+	
+	// The number of players to use.
+	private final int nPlayers;
+	
 	public Paddle[] paddles;
 	public GoalLine[] goalLines;
 
@@ -74,17 +77,24 @@ public class FinalProject extends Engine {
 	/**
 	 * Constructor
 	 */
-	public FinalProject() {
-
+	public FinalProject(int nPlayers) {
 		// Initialize the game engine with a name.
 		super(NAME);
+		
+		this.nPlayers = nPlayers;
+		
+		System.out.println("Starting a " + nPlayers + " player game.");
+		
+		// Initialize the game
+		initialize();
 	}
 
 	/**
 	 * Initialize all game objects.
 	 */
 	public void initialize() {
-
+		super.initialize();
+		
 		ball = new Ball(BALL_START_POSITION);
 
 		addObject(ball);
@@ -109,14 +119,14 @@ public class FinalProject extends Engine {
 	 */
 	private void initializePlayers() {
 
-		final double angleIncrement = 2 * Math.PI / N_PLAYERS;
+		final double angleIncrement = 2 * Math.PI / nPlayers;
 
-		paddles = new Paddle[N_PLAYERS];
-		goalLines = new GoalLine[N_PLAYERS];
+		paddles = new Paddle[nPlayers];
+		goalLines = new GoalLine[nPlayers];
 
 		Point2D a, b;
 
-		for (int i = 0; i < N_PLAYERS; i++) {
+		for (int i = 0; i < nPlayers; i++) {
 
 			a = new Point2D.Double(WINDOW_SCALE * Math.cos(i * angleIncrement),
 					WINDOW_SCALE * Math.sin(i * angleIncrement));
@@ -146,6 +156,12 @@ public class FinalProject extends Engine {
 	}
 
 	public static void main(String[] args) {
-		new FinalProject();
+		String inputString;
+        
+		inputString = JOptionPane.showInputDialog("Input the number of players:"); 
+        
+        int nPlayers = Integer.parseInt(inputString);
+		
+        new FinalProject(nPlayers);
 	}
 }
