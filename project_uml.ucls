@@ -104,8 +104,8 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="14" corner="BOTTOM_RIGHT" language="java" name="engine.ShapeSprite" project="cs_141_final_project" 
-    file="/cs_141_final_project/src/engine/ShapeSprite.java" binary="false">    
+  <class id="14" corner="BOTTOM_RIGHT" language="java" name="engine.Sprite" project="cs_141_final_project" 
+    file="/cs_141_final_project/src/engine/Sprite.java" binary="false">    
     <position height="127" width="181" x="718" y="557"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      

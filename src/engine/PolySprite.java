@@ -2,11 +2,10 @@ package engine;
 
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-public abstract class ShapeSprite implements Sprite {
-
+public abstract class PolySprite implements Sprite {
+	
 	protected abstract Shape getShape();
 
 	@Override
@@ -15,7 +14,7 @@ public abstract class ShapeSprite implements Sprite {
 		
 		final Rectangle2D bound = shape.getBounds2D();
 		
-		//g.translate(-bound.getCenterX(), -bound.getCenterY());
+		g.translate(-bound.getCenterX(), -bound.getCenterY());
 		g.fill(shape);
 	}
 }

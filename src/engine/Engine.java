@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EventObject;
 
 import javax.swing.Timer;
 
@@ -15,9 +16,11 @@ public abstract class Engine {
 
 	protected final static double WINDOW_SCALE = 10.;
 
-	protected final static int FRAME_RATE = 200; // updates/second
+	protected final static int FRAME_RATE = 300; // updates/second
 
 	public Window window;
+	public CollisionEngine collisionEngine;
+	
 	private ArrayList<GameObject> objects;
 
 	public engine.events.EventHandler eh;
@@ -33,6 +36,8 @@ public abstract class Engine {
 		// Initialize the game window
 		window = new Window(eh, name, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_SCALE);
 
+		collisionEngine = new CollisionEngine(eh);
+		
 		// Initialize game object list
 		objects = new ArrayList<GameObject>();
 
@@ -53,6 +58,16 @@ public abstract class Engine {
 					}
 				});
 
+		eh.addEventListener(Engine.UpdateEvent.class,
+				new engine.events.Listener() {
+
+					@Override
+					public boolean handle(EventObject e) {
+						onUpdate(((UpdateEvent)e).tick);
+						return false;
+					}
+				});
+		
 		// Trigger initial window paint
 		window.repaint();
 	}
@@ -61,8 +76,7 @@ public abstract class Engine {
 		// Number of milliseconds between frames
 		int delay = 1000 / FRAME_RATE; // milliseconds
 
-		// !!!!!! Awful hack to break the scope of the "this" keyword ....
-		// !!!!!!
+		// !!!!!! Awful hack to break the scope of the "this" keyword .... !!!!!!
 		final Engine this_ = this;
 
 		ActionListener timerListener = new ActionListener() {
@@ -86,6 +100,8 @@ public abstract class Engine {
 	 */
 	protected abstract void initialize();
 
+	protected abstract void onUpdate(long tick);
+	
 	/**
 	 * Registers an object with the game engine
 	 * 

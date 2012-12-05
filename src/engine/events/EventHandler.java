@@ -12,7 +12,7 @@ public class EventHandler {
 		eventListenerMap = new HashMap<Class<EventObject>, ArrayList<Listener>>();
 	}
 
-	public <T extends EventObject> void addEventListener(Class<T> eventType,
+	public synchronized <T extends EventObject> void addEventListener(Class<T> eventType,
 			Listener listener) {
 
 		ArrayList<Listener> eventListeners;
@@ -25,7 +25,7 @@ public class EventHandler {
 		eventListeners.add(listener);
 	}
 
-	public <T extends EventObject> void removeEventListener(Class<T> eventType,
+	public synchronized <T extends EventObject> void removeEventListener(Class<T> eventType,
 			Listener listener) {
 		ArrayList<Listener> eventListeners = eventListenerMap.get(eventType);
 

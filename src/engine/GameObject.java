@@ -1,6 +1,7 @@
 package engine;
 
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.util.EventObject;
 
@@ -8,14 +9,15 @@ import engine.Engine.UpdateEvent;
 
 public abstract class GameObject {
 
-	protected Point position;
-	protected Vector vector;
+	protected Point2D position;
+	protected Vector2D vector;
 
 	private Sprite sprite;
-
+	private Shape shape;
+	
 	public GameObject() {
-		position = new Point(0, 0);
-		vector = new Vector(0, 0);
+		position = new Point2D.Double(0, 0);
+		vector = new Vector2D(0, 0);
 	}
 
 	public void register(Engine e) {
@@ -37,67 +39,48 @@ public abstract class GameObject {
 
 					@Override
 					public boolean handle(EventObject e) {
-						onRender(((Window.PaintEvent) e).getGraphics());
+						renderTo(((Window.PaintEvent) e).getGraphics());
 						return false;
 					}
 				});
 	}
+	
+	private void renderTo(Graphics2D g) {
+		g.translate(position.getX(), position.getY());
+		
+		onRender(g);
+	}
 
 	protected void onRender(Graphics2D g) {
-		sprite.renderTo(g, position);
+		sprite.renderTo(g);
 	}
 
 	protected void onUpdate(Engine e, long tick) {
 
-		Vector updateVector = new Vector(vector);
+		Vector2D updateVector = new Vector2D(vector);
 
-		updateVector.magnitude *= tick / 1000.;
+		updateVector.length *= tick / 1000.;
 
 		// Update the object's position
-		this.position.move(updateVector);
+		updateVector.movePoint(position);
 
 		e.window.repaint();
 	}
 
-	protected Sprite getSprite() {
+	public Sprite getSprite() {
 		return sprite;
 	}
 
 	protected void setSprite(Sprite sprite) {
 		this.sprite = sprite;
 	}
-
-	public class Vector {
-
-		public double angle;
-		public double magnitude;
-
-		public Vector(double angle, double magnitude) {
-			this.angle = angle;
-			this.magnitude = magnitude;
-		}
-
-		public Vector(Vector v) {
-			this.angle = v.angle;
-			this.magnitude = v.magnitude;
-		}
-
+	
+	public Shape getShape() {
+		return shape;
 	}
 
-	public static class Point extends Point2D.Double {
-
-		public Point(double x, double y) {
-			super(x, y);
-		}
-
-		public Point(Point p) {
-			super(p.x, p.y);
-		}
-
-		public Point move(Vector v) {
-			x += v.magnitude * Math.cos(v.angle);
-			y += v.magnitude * Math.sin(v.angle);
-			return this;
-		}
+	protected void setShape(Shape shape) {
+		this.shape = shape;
 	}
+	
 }

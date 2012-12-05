@@ -1,20 +1,20 @@
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.geom.Line2D;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import engine.Engine;
 import engine.GameObject;
 import engine.ShapeSprite;
+import engine.Vector2D;
 
 public class Paddle extends GameObject {
 
 	private final static Color PADDLE_COLOR = Color.BLUE;
-	private final static Color GOAL_LINE_COLOR = Color.GREEN;
 
-	private final static double INITIAL_VELOCITY = 2;
+	private final static double INITIAL_VELOCITY = 3;
 
 	// The size of the game paddle
 	final static double WIDTH = 2.5;
@@ -25,15 +25,15 @@ public class Paddle extends GameObject {
 	private final int keyCodeB;
 
 	// Boundaries for the paddle
-	private final Point boundaryA;
-	private final Point boundaryB;
-
-	private final Line2D goalLine;
+	private final Point2D boundaryA;
+	private final Point2D boundaryB;
 
 	private final double trajectoryA;
 	private final double trajectoryB;
+	
+	private AffineTransform rotateTransform;
 
-	public Paddle(Point boundaryA, Point boundaryB, int keyCodeA, int keyCodeB) {
+	public Paddle(Point2D boundaryA, Point2D boundaryB, int keyCodeA, int keyCodeB) {
 		super();
 
 		this.keyCodeA = keyCodeA;
@@ -42,62 +42,65 @@ public class Paddle extends GameObject {
 		this.boundaryA = boundaryA;
 		this.boundaryB = boundaryB;
 
-		this.goalLine = new Line2D.Double(this.boundaryA, this.boundaryB);
-
 		// Calculate the angle for the paddle to travel on in each direction.
-		this.trajectoryA = Math.atan2(this.boundaryA.y - this.boundaryB.y,
-				this.boundaryA.x - this.boundaryB.x);
+		this.trajectoryA = Math.atan2(this.boundaryA.getY() - this.boundaryB.getY(),
+				this.boundaryA.getX() - this.boundaryB.getX());
 		this.trajectoryB = (this.trajectoryA + Math.PI) % (2 * Math.PI);
 
 		// The paddle's initial position is half-way between the two boundary
 		// points.
-		position = new Point((this.boundaryA.x + this.boundaryB.x) / 2.,
-				(this.boundaryA.y + this.boundaryB.y) / 2.);
+		position = new Point2D.Double((this.boundaryA.getX() + this.boundaryB.getX()) / 2.,
+				(this.boundaryA.getY() + this.boundaryB.getY()) / 2.);
 
+		// Create a transform to rotate the paddle to be parallel with the goal line.
+		rotateTransform = AffineTransform.getRotateInstance(trajectoryA - Math.PI / 2);
+		
 		// setSprite(new ImageSprite("paddle.png"));
 		setSprite(new PaddleSprite(THICKNESS, WIDTH));
-	}
-
-	protected void onRender(Graphics2D g) {
-
-		// Draw the goal line
-		g.setStroke(new BasicStroke(0.005f));
-		g.setColor(GOAL_LINE_COLOR);
-		g.draw(goalLine);
-
-		super.onRender(g);
 	}
 
 	protected void onUpdate(Engine e, long tick) {
 
 		if (e.window.keyboard.isKeyPressed(keyCodeA)) {
 			vector.angle = trajectoryA;
-			vector.magnitude = INITIAL_VELOCITY;
+			vector.length = INITIAL_VELOCITY;
 		}
-		if (e.window.keyboard.isKeyPressed(keyCodeB)) {
+		else if (e.window.keyboard.isKeyPressed(keyCodeB)) {
 			vector.angle = trajectoryB;
-			vector.magnitude = INITIAL_VELOCITY;
+			vector.length = INITIAL_VELOCITY;
+		} else {
+			vector.angle = 0;
+			vector.length = 0;
 		}
 
 		// Make sure the paddle dosn't go outside the boundaries.
 		if (position.distance(boundaryA) < WIDTH / 2.) {
-			position = new Point(boundaryA).move(new Vector(trajectoryB,
-					WIDTH / 2.));
+			position = (Point2D) boundaryA.clone();
+			new Vector2D(trajectoryB, WIDTH / 2.).movePoint(position);
 		}
 		if (position.distance(boundaryB) < WIDTH / 2.) {
-			position = new Point(boundaryB).move(new Vector(trajectoryA,
-					WIDTH / 2.));
+			position = (Point2D) boundaryB.clone();
+			new Vector2D(trajectoryA, WIDTH / 2.).movePoint(position);
 		}
 
 		super.onUpdate(e, tick);
 	}
+	
+	public Shape getShape() {
+		return ((PaddleSprite)getSprite()).getShape();
+	}
+	
+	public double getAngle() {
+		return trajectoryA;
+	}
 
 	private class PaddleSprite extends ShapeSprite {
 
-		private Rectangle2D shape;
-
+		private Shape shape;
+		
 		public PaddleSprite(double width, double height) {
-			shape = new Rectangle2D.Double(0, 0, width, height);
+			shape = new Rectangle2D.Double(-width/2, -height/2, width, height);
+			shape = rotateTransform.createTransformedShape(shape);
 		}
 
 		@Override
@@ -105,16 +108,10 @@ public class Paddle extends GameObject {
 			return shape;
 		}
 
-		public void onRender(Graphics2D g) {
-
-			// Rotate paddle to be parallel with the goal line
-			g.rotate(trajectoryA - Math.PI / 2);
-
-			g.translate(-shape.getWidth() / 2, -shape.getHeight() / 2);
-
+		@Override
+		public void renderTo(Graphics2D g) {
 			g.setColor(PADDLE_COLOR);
-			g.fill(getShape());
+			super.renderTo(g);
 		}
 	}
-
 }
