@@ -9,6 +9,8 @@ import java.util.EventObject;
 
 import javax.swing.Timer;
 
+import engine.events.EventHandler;
+
 public abstract class Engine {
 
 	protected final static int WINDOW_WIDTH = 800;
@@ -18,20 +20,24 @@ public abstract class Engine {
 
 	protected final static int FRAME_RATE = 300; // updates/second
 
+	protected final static int EXIT_KEY  = KeyEvent.VK_ESCAPE;
+	protected final static int PAUSE_KEY = KeyEvent.VK_SPACE;
+	
 	public Window window;
 	public CollisionEngine collisionEngine;
+	public EventHandler eh;
 	
 	private ArrayList<GameObject> objects;
+	
+	protected Timer gameTimer;
 
-	public engine.events.EventHandler eh;
-
-	// The time of the last click.
+	// The time of the last timer tick.
 	private long lastTick;
 
+	
 	public Engine(String name) {
 
 		eh = new engine.events.EventHandler();
-		lastTick = new Date().getTime();
 
 		// Initialize the game window
 		window = new Window(eh, name, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_SCALE);
@@ -48,12 +54,22 @@ public abstract class Engine {
 		
 		// When the Escape key is pressed exit the game
 		eh.addEventListener(Window.Keyboard.KeyPressEvent.class,
-				new Window.Keyboard.KeyboardListener(KeyEvent.VK_ESCAPE) {
+				new Window.Keyboard.KeyboardListener(EXIT_KEY) {
 
 					@Override
 					protected boolean handle_key(KeyEvent e) {
-						window.setVisible(false);
-						System.exit(0);
+						stop();
+						return false;
+					}
+				});
+		
+		// When the Space key is pressed pause/resume the game
+		eh.addEventListener(Window.Keyboard.KeyPressEvent.class,
+				new Window.Keyboard.KeyboardListener(PAUSE_KEY) {
+
+					@Override
+					protected boolean handle_key(KeyEvent e) {
+						toggle();
 						return false;
 					}
 				});
@@ -70,7 +86,6 @@ public abstract class Engine {
 		
 		// Trigger initial window paint
 		window.repaint();
-		
 	}
 	
 	private void initTimer() {
@@ -93,10 +108,39 @@ public abstract class Engine {
 				eh.dispatchEvent(new UpdateEvent(this_, tick));
 			}
 		};
-		new Timer(delay, timerListener).start();
+		gameTimer = new Timer(delay, timerListener);
 	}
 
 	protected abstract void onUpdate(long tick);
+	
+	/**
+	 * Starts the game
+	 */
+	public void start() {
+		lastTick = new Date().getTime();
+		
+		gameTimer.start();
+	}
+	
+	/**
+	 * Toggles between the play and pause state.
+	 */
+	public void toggle() {
+		if (gameTimer.isRunning()) {
+			gameTimer.stop();
+		} else {
+			start();
+		}
+	}
+	
+	/**
+	 * Stops the game
+	 */
+	public void stop() {
+		gameTimer.stop();
+		window.setVisible(false);
+		System.exit(0);
+	}
 	
 	/**
 	 * Registers an object with the game engine
