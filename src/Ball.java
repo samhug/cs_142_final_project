@@ -17,6 +17,7 @@ public class Ball extends GameObject {
 
 	// The initial speed of the ball measured in `units/second`
 	final static double INITIAL_SPEED = 4;
+	final static double SPEED_INCREMENT = 1.1;
 
 	// The size of the ball
 	final static double RADIUS = 0.5;
@@ -47,7 +48,7 @@ public class Ball extends GameObject {
 	}
 	
 	public void stop() {
-		vector.length = 0;
+	//	vector.length = 0; This can be a problem since the paddle can make the ball start moving again after hitting the edge
 	}
 	
 	public Shape getShape() {
@@ -79,6 +80,8 @@ public class Ball extends GameObject {
 		vector.angle = ref_angle - d_angle;
 		
 		System.out.println("Bump!");
+		
+		vector.length = vector.length * SPEED_INCREMENT; // speeds up ball after hitting paddles
 	}
 	
 	public void onCollideGoal(GoalLine goal) {
