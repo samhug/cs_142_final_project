@@ -42,9 +42,10 @@ public class Paddle extends GameObject {
 		this.boundaryA = boundaryA;
 		this.boundaryB = boundaryB;
 
-		// Calculate the angle for the paddle to travel on in each direction.
-		this.trajectoryA = Math.atan2(this.boundaryA.getY() - this.boundaryB.getY(),
-				this.boundaryA.getX() - this.boundaryB.getX());
+		// Calculate the angle of the line boundaryA, boundaryB
+		this.trajectoryA = Math.atan2(this.boundaryB.getY() - this.boundaryA.getY(), this.boundaryB.getX() - this.boundaryA.getX());// + 2*Math.PI) % (2 * Math.PI);
+		
+		// Calculate the angle of the line boundaryB, boundaryA
 		this.trajectoryB = (this.trajectoryA + Math.PI) % (2 * Math.PI);
 
 		// The paddle's initial position is half-way between the two boundary
@@ -76,11 +77,11 @@ public class Paddle extends GameObject {
 		// Make sure the paddle dosn't go outside the boundaries.
 		if (position.distance(boundaryA) < WIDTH / 2.) {
 			position = (Point2D) boundaryA.clone();
-			new Vector2D(trajectoryB, WIDTH / 2.).movePoint(position);
+			new Vector2D(trajectoryA, WIDTH / 2.).movePoint(position);
 		}
 		if (position.distance(boundaryB) < WIDTH / 2.) {
 			position = (Point2D) boundaryB.clone();
-			new Vector2D(trajectoryA, WIDTH / 2.).movePoint(position);
+			new Vector2D(trajectoryB, WIDTH / 2.).movePoint(position);
 		}
 
 		super.onUpdate(e, tick);

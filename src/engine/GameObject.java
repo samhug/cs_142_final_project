@@ -2,6 +2,7 @@ package engine;
 
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.EventObject;
 
@@ -65,6 +66,10 @@ public abstract class GameObject {
 		updateVector.movePoint(position);
 
 		e.window.repaint();
+	}
+	
+	public AffineTransform getTranslateTransform() {
+		return AffineTransform.getTranslateInstance(position.getX(), position.getY());
 	}
 
 	public Sprite getSprite() {

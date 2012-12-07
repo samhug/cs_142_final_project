@@ -103,13 +103,7 @@ public class FinalProject extends Engine {
 		initializePlayers();
 	}
 
-	protected void onUpdate(long tick) {
-
-		/*
-		 * // Check for collisions between the ball and paddles for (Paddle
-		 * paddle : paddles) { paddle //paddle.getSprite(). }
-		 */
-	}
+	protected void onUpdate(long tick) {}
 
 	/**
 	 * Splits the circumference of a circle into `2*N_PLAYERS - 1` points to act
@@ -140,14 +134,27 @@ public class FinalProject extends Engine {
 			addObject(goalLines[i]);
 			addObject(paddles[i]);
 
-			collisionEngine.addListener(ball, paddles[i],
+			collisionEngine.addListener(paddles[i], ball,
 					new engine.events.Listener() {
 
 						@Override
 						public boolean handle(EventObject e_) {
 							CollisionEngine.CollisionEvent e = (CollisionEvent) e_;
 
-							ball.onCollidePaddle((Paddle) e.getVictim());
+							ball.onCollidePaddle((Paddle) e.getSource());
+
+							return false;
+						}
+					});
+
+			collisionEngine.addListener(goalLines[i], ball,
+					new engine.events.Listener() {
+
+						@Override
+						public boolean handle(EventObject e_) {
+							CollisionEngine.CollisionEvent e = (CollisionEvent) e_;
+
+							ball.onCollideGoal((GoalLine) e.getSource());
 
 							return false;
 						}
