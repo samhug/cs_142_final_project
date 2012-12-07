@@ -215,12 +215,19 @@ public class FinalProject extends Engine {
 	
 	public static void main(String[] args) {
 		String inputString;
+		int nPlayers = 0;
 
-		inputString = JOptionPane
-				.showInputDialog("Input the number of players:");
-
-		int nPlayers = Integer.parseInt(inputString);
-
+		while (nPlayers < 2) {
+			inputString = JOptionPane
+					.showInputDialog("Input the number of players:");
+	
+			try {
+				nPlayers = Integer.parseInt(inputString);
+			} catch (NumberFormatException e) {
+				return;
+			}
+		}
+		
 		new FinalProject(nPlayers).start();
 	}
 	
