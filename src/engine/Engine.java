@@ -1,5 +1,6 @@
 package engine;
 
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -84,6 +85,16 @@ public abstract class Engine {
 					}
 				});
 		
+		eh.addEventListener(Window.PaintEvent.class,
+				new engine.events.Listener() {
+
+					@Override
+					public boolean handle(EventObject e) {
+						onRender(((Window.PaintEvent) e).getGraphics());
+						return false;
+					}
+				});
+		
 		// Trigger initial window paint
 		window.repaint();
 	}
@@ -113,6 +124,10 @@ public abstract class Engine {
 
 	protected abstract void onUpdate(long tick);
 	
+	protected void onRender(Graphics2D g) {
+		
+	}
+	
 	/**
 	 * Starts the game
 	 */
@@ -129,7 +144,8 @@ public abstract class Engine {
 		if (gameTimer.isRunning()) {
 			gameTimer.stop();
 		} else {
-			start();
+			lastTick = new Date().getTime();
+			gameTimer.start();
 		}
 	}
 	
@@ -155,6 +171,16 @@ public abstract class Engine {
 		object.register(this);
 
 		return object;
+	}
+	
+	/**
+	 * Unregisters an object with the game engine
+	 * 
+	 * @param object
+	 *            The object to register
+	 */
+	protected void removeObject(GameObject object) {
+		objects.remove(object);
 	}
 
 	public static class UpdateEvent extends engine.events.Event {

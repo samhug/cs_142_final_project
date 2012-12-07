@@ -5,8 +5,10 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
+import java.util.EventObject;
 import java.util.Random;
 
+import engine.Engine;
 import engine.GameObject;
 import engine.ShapeSprite;
 import engine.Vector2D;
@@ -24,11 +26,24 @@ public class Ball extends GameObject {
 
 		position = (Point2D) initial_position.clone();
 
-		// Pick a random angle for the initial vector
-		final double theta = (2 * Math.PI) * new Random().nextDouble();
-		vector = new Vector2D(theta, INITIAL_SPEED);
-
 		setSprite(new BallSprite(RADIUS));
+	}
+	
+	public void register(Engine e) {
+		super.register(e);
+		
+		e.eh.addEventListener(FinalProject.GameStartEvent.class,
+				new engine.events.Listener() {
+
+					@Override
+					public boolean handle(EventObject e_) {
+						
+						// Sets the ball vector to a random angle and the initial speed
+						vector = new Vector2D((2 * Math.PI) * new Random().nextDouble(), INITIAL_SPEED);
+						
+						return false;
+					}
+				});
 	}
 	
 	public void stop() {
