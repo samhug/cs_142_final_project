@@ -19,12 +19,20 @@ public class Ball extends GameObject {
 	final static double INITIAL_SPEED = 4;
 	final static double SPEED_INCREMENT = 1.1;
 
+	// The level of randomness to use in calculating collision responses. This helps
+	// minimize situations where the ball bounces in a repeating pattern.
+	final static double COLLISON_NOISE_FACTOR = 0.05;
+	
 	// The size of the ball
 	final static double RADIUS = 0.5;
+	
+	private Random random;
 
 	public Ball(Point2D initial_position) {
 		super();
 
+		random = new Random();
+		
 		position = (Point2D) initial_position.clone();
 
 		setSprite(new BallSprite(RADIUS));
@@ -40,7 +48,7 @@ public class Ball extends GameObject {
 					public boolean handle(EventObject e_) {
 						
 						// Sets the ball vector to a random angle and the initial speed
-						vector = new Vector2D((2 * Math.PI) * new Random().nextDouble(), INITIAL_SPEED);
+						vector = new Vector2D((2 * Math.PI) * random.nextDouble(), INITIAL_SPEED);
 						
 						return false;
 					}
@@ -69,6 +77,8 @@ public class Ball extends GameObject {
 		// The angle between the collision vector and the perpendicular line. 
 		double d_angle = (vector.angle + Math.PI) % (2*Math.PI) - ref_angle;
 		//System.out.println(vector.angle + ", " + p_angle + ", " + perp_angle + ", " + d_angle);
+		
+		d_angle *= COLLISON_NOISE_FACTOR*random.nextDouble();
 		
 		// Back the circle out of the paddle		
 		double d = ptShapeClosest(shape, position) - RADIUS;
