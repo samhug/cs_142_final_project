@@ -89,6 +89,9 @@ public class FinalProject extends Engine {
 	// This timer is used to provide a delay at the beginning of the game.
 	private Timer countdownTimer;
 	private int countdownValue;
+	
+	private boolean isGameOver = false;
+	private int loserPlayer;
 
 	/**
 	 * Constructor
@@ -135,13 +138,29 @@ public class FinalProject extends Engine {
 			g.translate(-3, 3);
 			g.drawString(Integer.toString(countdownValue), 0, 0);
 		}
+		
+		if (isGameOver) {
+			g.setColor(Color.RED);
+			g.scale(0.15, -0.15);
+			g.translate(-45, 20);
+			g.drawString("Player " + loserPlayer + " Loses!", 0, 0);
+		}
 	}
 	
-	public void onPlayerLose(GoalLine goal) {
-		//System.out.println("Oops!");
-		goal.incrementScore();
+	public void onPlayerLose(GoalLine goal) {		
 		ball.reset();
-		reset();
+		goal.incrementScore();
+		
+		if (goal.getScore() == LOSING_SCORE) {
+			soundEngine.playSound("death.wav");
+			System.out.println("Player " + goal.playerNum + " loses!!");
+			isGameOver = true;
+			loserPlayer = goal.playerNum;
+		} else {
+			soundEngine.playSound("oops.wav");
+			goal.updateColor();
+			reset();
+		}
 	}
 	
 	/**
@@ -179,9 +198,9 @@ public class FinalProject extends Engine {
 						@Override
 						public boolean handle(EventObject e_) {
 							CollisionEngine.CollisionEvent e = (CollisionEvent) e_;
-
+							
+							soundEngine.playSound("chirp.wav");
 							ball.onCollidePaddle((Paddle) e.getSource());
-
 							return false;
 						}
 					});
@@ -192,8 +211,6 @@ public class FinalProject extends Engine {
 						@Override
 						public boolean handle(EventObject e_) {
 							CollisionEngine.CollisionEvent e = (CollisionEvent) e_;
-
-							//ball.onCollideGoal((GoalLine) e.getSource());
 							onPlayerLose((GoalLine) e.getSource());
 							return false;
 						}

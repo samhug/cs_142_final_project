@@ -41,12 +41,14 @@ public class GoalLine extends GameObject {
 	
 	public void incrementScore() {
 		score++;
-		
-		if (score == maxScore) {
-			System.out.println("Player " + playerNum + " loses!!");
-		}
-		
+	}
+	
+	public void updateColor() {
 		color = getColorMix(INITIAL_COLOR, LOSING_COLOR, (double)(score+1)/maxScore);
+	}
+	
+	public int getScore() {
+		return score;
 	}
 	
 	private static Color getColorMix(Color start, Color end, double mixRatio) {

@@ -26,6 +26,7 @@ public abstract class Engine {
 	
 	public Window window;
 	public CollisionEngine collisionEngine;
+	public SoundEngine soundEngine;
 	public EventHandler eh;
 	
 	private ArrayList<GameObject> objects;
@@ -44,6 +45,7 @@ public abstract class Engine {
 		window = new Window(eh, name, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_SCALE);
 
 		collisionEngine = new CollisionEngine(eh);
+		soundEngine = new SoundEngine();
 		
 		// Initialize game object list
 		objects = new ArrayList<GameObject>();
