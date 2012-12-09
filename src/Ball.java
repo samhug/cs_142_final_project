@@ -15,23 +15,41 @@ import engine.Vector2D;
 
 public class Ball extends GameObject {
 
-	// The initial speed of the ball measured in `units/second`
+	/**
+	 * The starting speed of the ball measured in `units/second`
+	 */
 	final static double INITIAL_SPEED = 4;
+
+	/**
+	 * The amount the speed of the ball increases on every collision.
+	 */
 	final static double SPEED_INCREMENT = 1.1;
 
-	/*
+	/**
 	 * The level of randomness to use in calculating collision responses. This
 	 * helps minimize situations where the ball bounces in a repeating pattern.
 	 */
 	final static double COLLISON_NOISE_FACTOR = 0.05;
 
-	// The size of the ball
+	/**
+	 * The size of the ball
+	 */
 	final static double RADIUS = 0.5;
 
+	/**
+	 * The starting position of the ball.
+	 */
 	private final Point2D initialPosition;
 
 	private Random random;
 
+	
+	/**
+	 * Initializes the ball at the given position.
+	 * 
+	 * @param initialPosition
+	 *            The starting position of the ball.
+	 */
 	public Ball(Point2D initialPosition) {
 		super();
 
@@ -43,6 +61,7 @@ public class Ball extends GameObject {
 		setSprite(new BallSprite(RADIUS));
 	}
 
+	
 	public void register(Engine e) {
 		super.register(e);
 
@@ -62,6 +81,9 @@ public class Ball extends GameObject {
 				});
 	}
 
+	/**
+	 * Resets the ball to its initial position.
+	 */
 	public void reset() {
 		position = (Point2D) initialPosition.clone();
 		vector.length = 0;
@@ -71,6 +93,11 @@ public class Ball extends GameObject {
 		return ((BallSprite) getSprite()).getShape();
 	}
 
+	/**
+	 * This method is called when this ball collides with a paddle.
+	 * 
+	 * @param paddle The paddle the ball collided with.
+	 */
 	public void onCollidePaddle(Paddle paddle) {
 
 		Shape shape = paddle.getTranslateTransform().createTransformedShape(
@@ -92,7 +119,7 @@ public class Ball extends GameObject {
 		d_angle *= COLLISON_NOISE_FACTOR * random.nextDouble();
 
 		// Back the circle out of the paddle
-		double d = ptShapeClosest(shape, position) - RADIUS;
+		double d = ptShapeDistance(shape, position) - RADIUS;
 		if (d < 0) {
 			new Vector2D(vector.angle, d).movePoint(position);
 		}
@@ -106,9 +133,15 @@ public class Ball extends GameObject {
 															// hitting paddles
 	}
 
-	
-
-	private double ptShapeClosest(Shape shape, Point2D point) {
+	/**
+	 * Calculates the minimum distance from a point to shape.
+	 * 
+	 * @param shape
+	 * @param point
+	 * 
+	 * @return The distance between the point and shape.
+	 */
+	private double ptShapeDistance(Shape shape, Point2D point) {
 		PathIterator p_it = shape.getPathIterator(null);
 
 		double[] coords = new double[6];

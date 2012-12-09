@@ -20,8 +20,14 @@ public class Paddle extends GameObject {
 	final static double WIDTH = 2.5;
 	final static double THICKNESS = 0.3;
 
-	// The keys used to control the paddle
+	/**
+	 * The key that moves the paddle in the direction of `boundaryA`
+	 */
 	private final int keyCodeA;
+	
+	/**
+	 * The key that moves the paddle in the direction of `boundaryB`
+	 */
 	private final int keyCodeB;
 
 	// Boundaries for the paddle
@@ -30,10 +36,11 @@ public class Paddle extends GameObject {
 
 	private final double trajectoryA;
 	private final double trajectoryB;
-	
+
 	private AffineTransform rotateTransform;
 
-	public Paddle(Point2D boundaryA, Point2D boundaryB, int keyCodeA, int keyCodeB) {
+	public Paddle(Point2D boundaryA, Point2D boundaryB, int keyCodeA,
+			int keyCodeB) {
 		super();
 
 		this.keyCodeA = keyCodeA;
@@ -43,19 +50,24 @@ public class Paddle extends GameObject {
 		this.boundaryB = boundaryB;
 
 		// Calculate the angle of the line boundaryA, boundaryB
-		this.trajectoryA = Math.atan2(this.boundaryB.getY() - this.boundaryA.getY(), this.boundaryB.getX() - this.boundaryA.getX());// + 2*Math.PI) % (2 * Math.PI);
+		this.trajectoryA = Math.atan2(
+				this.boundaryB.getY() - this.boundaryA.getY(),
+				this.boundaryB.getX() - this.boundaryA.getX());
 		
 		// Calculate the angle of the line boundaryB, boundaryA
 		this.trajectoryB = (this.trajectoryA + Math.PI) % (2 * Math.PI);
 
 		// The paddle's initial position is half-way between the two boundary
 		// points.
-		position = new Point2D.Double((this.boundaryA.getX() + this.boundaryB.getX()) / 2.,
+		position = new Point2D.Double(
+				(this.boundaryA.getX() + this.boundaryB.getX()) / 2.,
 				(this.boundaryA.getY() + this.boundaryB.getY()) / 2.);
 
-		// Create a transform to rotate the paddle to be parallel with the goal line.
-		rotateTransform = AffineTransform.getRotateInstance(trajectoryA - Math.PI / 2);
-		
+		// Create a transform to rotate the paddle to be parallel with the goal
+		// line.
+		rotateTransform = AffineTransform.getRotateInstance(trajectoryA
+				- Math.PI / 2);
+
 		// setSprite(new ImageSprite("paddle.png"));
 		setSprite(new PaddleSprite(THICKNESS, WIDTH));
 	}
@@ -65,8 +77,7 @@ public class Paddle extends GameObject {
 		if (e.window.keyboard.isKeyPressed(keyCodeA)) {
 			vector.angle = trajectoryA;
 			vector.length = INITIAL_VELOCITY;
-		}
-		else if (e.window.keyboard.isKeyPressed(keyCodeB)) {
+		} else if (e.window.keyboard.isKeyPressed(keyCodeB)) {
 			vector.angle = trajectoryB;
 			vector.length = INITIAL_VELOCITY;
 		} else {
@@ -86,11 +97,11 @@ public class Paddle extends GameObject {
 
 		super.onUpdate(e, tick);
 	}
-	
+
 	public Shape getShape() {
-		return ((PaddleSprite)getSprite()).getShape();
+		return ((PaddleSprite) getSprite()).getShape();
 	}
-	
+
 	public double getAngle() {
 		return trajectoryA;
 	}
@@ -98,9 +109,10 @@ public class Paddle extends GameObject {
 	private class PaddleSprite extends ShapeSprite {
 
 		private Shape shape;
-		
+
 		public PaddleSprite(double width, double height) {
-			shape = new Rectangle2D.Double(-width/2, -height/2, width, height);
+			shape = new Rectangle2D.Double(-width / 2, -height / 2, width,
+					height);
 			shape = rotateTransform.createTransformedShape(shape);
 		}
 

@@ -70,9 +70,9 @@ public class CollisionEngine {
 	
 	protected void onUpdate(long tick) {
 
-		Iterator it = objectCollisionMap.entrySet().iterator();
+		Iterator<Map.Entry<GameObject, ArrayList<GameObject>>> it = objectCollisionMap.entrySet().iterator();
 	    while (it.hasNext()) {
-	        Map.Entry pairs = (Map.Entry)it.next();
+	    	Map.Entry<GameObject, ArrayList<GameObject>> pairs = it.next();
 	        
 	        GameObject source             = (GameObject) pairs.getKey();
 	        ArrayList<GameObject> victims = (ArrayList<GameObject>) pairs.getValue();
@@ -85,13 +85,8 @@ public class CollisionEngine {
 	
 	protected void checkCollision(GameObject source, GameObject victim) {
 		
-		
-		
 		AffineTransform.getTranslateInstance(source.position.getX(), source.position.getY());
 		AffineTransform.getTranslateInstance(victim.position.getX(), victim.position.getY());
-		
-		//Rectangle2D sourceBounds = source.getBounds();
-		//Rectangle2D victimBounds = victim.getBounds();
 		
 		if (objectShapesIntersect(source, victim)) {
 			eh.dispatchEvent(new CollisionEvent(source, victim));
@@ -100,10 +95,6 @@ public class CollisionEngine {
 	
 	public boolean objectShapesIntersect(GameObject source, GameObject victim)
     {
-		
-		//Shape shapeA = AffineTransform.getTranslateInstance(source.position.getX(), source.position.getY()).createTransformedShape(source.getShape());
-		//Shape shapeB = AffineTransform.getTranslateInstance(victim.position.getX(), victim.position.getY()).createTransformedShape(victim.getShape());
-		
 		Shape shapeA = source.getTranslateTransform().createTransformedShape(source.getShape());
 		Shape shapeB = victim.getTranslateTransform().createTransformedShape(victim.getShape());
 		

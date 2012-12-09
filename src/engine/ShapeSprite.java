@@ -5,6 +5,9 @@ import java.awt.Shape;
 
 public abstract class ShapeSprite implements Sprite {
 
+	/**
+	 * Returns the shape if the given sprite.
+	 */
 	protected abstract Shape getShape();
 
 	@Override

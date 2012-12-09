@@ -14,29 +14,41 @@ import engine.events.EventHandler;
 
 public abstract class Engine {
 
+	/**
+	 * The width of the window in pixels.
+	 */
 	protected final static int WINDOW_WIDTH = 800;
+
+	/**
+	 * The height of the window in pixels.
+	 */
 	protected final static int WINDOW_HEIGHT = 800;
 
+	/**
+	 * The scale to use when transforming the coordinate system.
+	 */
 	protected final static double WINDOW_SCALE = 10.;
 
-	protected final static int FRAME_RATE = 300; // updates/second
+	/**
+	 * The number of times per second the game engine should update.
+	 */
+	protected final static int FRAME_RATE = 300;
 
-	protected final static int EXIT_KEY  = KeyEvent.VK_ESCAPE;
+	protected final static int EXIT_KEY = KeyEvent.VK_ESCAPE;
 	protected final static int PAUSE_KEY = KeyEvent.VK_SPACE;
-	
+
 	public Window window;
 	public CollisionEngine collisionEngine;
 	public SoundEngine soundEngine;
 	public EventHandler eh;
-	
+
 	private ArrayList<GameObject> objects;
-	
+
 	protected Timer gameTimer;
 
 	// The time of the last timer tick.
 	private long lastTick;
 
-	
 	public Engine(String name) {
 
 		eh = new engine.events.EventHandler();
@@ -46,15 +58,15 @@ public abstract class Engine {
 
 		collisionEngine = new CollisionEngine(eh);
 		soundEngine = new SoundEngine();
-		
+
 		// Initialize game object list
 		objects = new ArrayList<GameObject>();
 	}
 
 	protected void initialize() {
-		
+
 		initTimer();
-		
+
 		// When the Escape key is pressed exit the game
 		eh.addEventListener(Window.Keyboard.KeyPressEvent.class,
 				new Window.Keyboard.KeyboardListener(EXIT_KEY) {
@@ -65,7 +77,7 @@ public abstract class Engine {
 						return false;
 					}
 				});
-		
+
 		// When the Space key is pressed pause/resume the game
 		eh.addEventListener(Window.Keyboard.KeyPressEvent.class,
 				new Window.Keyboard.KeyboardListener(PAUSE_KEY) {
@@ -82,11 +94,11 @@ public abstract class Engine {
 
 					@Override
 					public boolean handle(EventObject e) {
-						onUpdate(((UpdateEvent)e).tick);
+						onUpdate(((UpdateEvent) e).tick);
 						return false;
 					}
 				});
-		
+
 		eh.addEventListener(Window.PaintEvent.class,
 				new engine.events.Listener() {
 
@@ -96,16 +108,17 @@ public abstract class Engine {
 						return false;
 					}
 				});
-		
+
 		// Trigger initial window paint
 		window.repaint();
 	}
-	
+
 	private void initTimer() {
 		// Number of milliseconds between frames
 		int delay = 1000 / FRAME_RATE; // milliseconds
 
-		// !!!!!! Awful hack to break the scope of the "this" keyword .... !!!!!!
+		// !!!!!! Awful hack to break the scope of the "this" keyword ....
+		// !!!!!!
 		final Engine this_ = this;
 
 		ActionListener timerListener = new ActionListener() {
@@ -125,20 +138,20 @@ public abstract class Engine {
 	}
 
 	protected abstract void onUpdate(long tick);
-	
+
 	protected void onRender(Graphics2D g) {
-		
+
 	}
-	
+
 	/**
 	 * Starts the game
 	 */
 	public void start() {
 		lastTick = new Date().getTime();
-		
+
 		gameTimer.start();
 	}
-	
+
 	/**
 	 * Toggles between the play and pause state.
 	 */
@@ -150,7 +163,7 @@ public abstract class Engine {
 			gameTimer.start();
 		}
 	}
-	
+
 	/**
 	 * Stops the game
 	 */
@@ -159,7 +172,7 @@ public abstract class Engine {
 		window.setVisible(false);
 		System.exit(0);
 	}
-	
+
 	/**
 	 * Registers an object with the game engine
 	 * 
@@ -174,7 +187,7 @@ public abstract class Engine {
 
 		return object;
 	}
-	
+
 	/**
 	 * Unregisters an object with the game engine
 	 * 

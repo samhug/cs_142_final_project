@@ -67,18 +67,24 @@ public class PlethoraOfPong extends Engine {
 
 	};
 	
-	// Delays the start of the game with a 5 second count down.
+	/**
+	 * The number of seconds to delay the game in between points. 
+	 */
 	private static final int COUNTDOWN_DELAY = 5;
 	
-	// The number of points a player gets before he loses.
+	/**
+	 * The number of points that causes a player to lose. 
+	 */
 	private static final int LOSING_SCORE = 3;
 
-	// The point on the screen that the Pong ball should start at.
-	private static final Point2D BALL_START_POSITION = new Point2D.Double(0, 0); // Center
-																					// of
-																					// screen
+	/**
+	 * The point on the screen that the ball should start at.
+	 */
+	private static final Point2D BALL_START_POSITION = new Point2D.Double(0, 0);
 	
-	// The number of players to use.
+	/**
+	 * The number of players in the game.
+	 */
 	private final int nPlayers;
 
 	public Paddle[] paddles;
