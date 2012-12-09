@@ -13,10 +13,10 @@ import engine.CollisionEngine;
 import engine.CollisionEngine.CollisionEvent;
 import engine.Engine;
 
-public class FinalProject extends Engine {
+public class PlethoraOfPong extends Engine {
 	
 	// The name of the game.
-	private static final String NAME = "Pong";
+	private static final String NAME = "Plethora Of Pong";
 	
 	// Predefined list of keys to assign to players.
 	private static final int[][] PLAYER_KEYS = {
@@ -96,7 +96,7 @@ public class FinalProject extends Engine {
 	/**
 	 * Constructor
 	 */
-	public FinalProject(int nPlayers) {
+	public PlethoraOfPong(int nPlayers) {
 		// Initialize the game engine with a name.
 		super(NAME);
 
@@ -221,7 +221,7 @@ public class FinalProject extends Engine {
 	public void reset() {
 		countdownValue = COUNTDOWN_DELAY;
 		
-		final FinalProject this_ = this;
+		final PlethoraOfPong this_ = this;
 		
 		ActionListener timerAction = new ActionListener() {
 			@Override
@@ -254,7 +254,7 @@ public class FinalProject extends Engine {
 			}
 		}
 		
-		new FinalProject(nPlayers).start();
+		new PlethoraOfPong(nPlayers).start();
 	}
 	
 	public static class GameStartEvent extends engine.events.Event {

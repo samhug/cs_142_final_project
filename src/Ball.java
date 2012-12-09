@@ -46,7 +46,7 @@ public class Ball extends GameObject {
 	public void register(Engine e) {
 		super.register(e);
 
-		e.eh.addEventListener(FinalProject.GameStartEvent.class,
+		e.eh.addEventListener(PlethoraOfPong.GameStartEvent.class,
 				new engine.events.Listener() {
 
 					@Override

@@ -1,6 +1,6 @@
-TCC CS 141 Final Project
+Plethora Of Pong
 ========================
 
 <br>
 > ## Project Description
->> This is a basic Pong clone.
+>> The goal of this project is to create the most awesome mulit-player pong game ever.
