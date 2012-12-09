@@ -69,6 +69,9 @@ public class FinalProject extends Engine {
 	
 	// Delays the start of the game with a 5 second count down.
 	private static final int COUNTDOWN_DELAY = 5;
+	
+	// The number of points a player gets before he loses.
+	private static final int LOSING_SCORE = 3;
 
 	// The point on the screen that the Pong ball should start at.
 	private static final Point2D BALL_START_POSITION = new Point2D.Double(0, 0); // Center
@@ -134,6 +137,13 @@ public class FinalProject extends Engine {
 		}
 	}
 	
+	public void onPlayerLose(GoalLine goal) {
+		//System.out.println("Oops!");
+		goal.incrementScore();
+		ball.reset();
+		reset();
+	}
+	
 	/**
 	 * Splits the circumference of a circle into `2*N_PLAYERS - 1` points to act
 	 * as the boundaries for `N_PLAYERS` player paddles, arranged in a polygon
@@ -158,7 +168,7 @@ public class FinalProject extends Engine {
 
 			paddles[i] = new Paddle(a, b, PLAYER_KEYS[i][0], PLAYER_KEYS[i][1]);
 
-			goalLines[i] = new GoalLine(a, b);
+			goalLines[i] = new GoalLine(i+1, LOSING_SCORE, a, b);
 
 			addObject(goalLines[i]);
 			addObject(paddles[i]);
@@ -183,12 +193,11 @@ public class FinalProject extends Engine {
 						public boolean handle(EventObject e_) {
 							CollisionEngine.CollisionEvent e = (CollisionEvent) e_;
 
-							ball.onCollideGoal((GoalLine) e.getSource());
-
+							//ball.onCollideGoal((GoalLine) e.getSource());
+							onPlayerLose((GoalLine) e.getSource());
 							return false;
 						}
 					});
-
 		}
 	}
 	

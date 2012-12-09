@@ -26,14 +26,18 @@ public class Ball extends GameObject {
 	// The size of the ball
 	final static double RADIUS = 0.5;
 	
+	private final Point2D initialPosition;
+	
 	private Random random;
+	
 
-	public Ball(Point2D initial_position) {
+	public Ball(Point2D initialPosition) {
 		super();
 
+		this.initialPosition = initialPosition;
 		random = new Random();
 		
-		position = (Point2D) initial_position.clone();
+		reset();
 
 		setSprite(new BallSprite(RADIUS));
 	}
@@ -55,8 +59,9 @@ public class Ball extends GameObject {
 				});
 	}
 	
-	public void stop() {
-	//	vector.length = 0; This can be a problem since the paddle can make the ball start moving again after hitting the edge
+	public void reset() {
+		position = (Point2D)initialPosition.clone();
+		vector.length = 0;
 	}
 	
 	public Shape getShape() {
@@ -89,14 +94,9 @@ public class Ball extends GameObject {
 
 		vector.angle = ref_angle - d_angle;
 		
-		System.out.println("Bump!");
+		//System.out.println("Bump!");
 		
 		vector.length = vector.length * SPEED_INCREMENT; // speeds up ball after hitting paddles
-	}
-	
-	public void onCollideGoal(GoalLine goal) {
-		System.out.println("Oops!");
-		stop();
 	}
 	
 	private double ptShapeClosest(Shape shape, Point2D point) {

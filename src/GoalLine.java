@@ -10,22 +10,55 @@ import engine.GameObject;
 
 public class GoalLine extends GameObject {
 
-	private static final Color COLOR = Color.GREEN;
+	private static final Color INITIAL_COLOR = Color.GREEN;
+	private static final Color LOSING_COLOR  = Color.RED;
+	
 	private static final float WIDTH = 0.005f;
 	
 	private final Line2D line;
+	private final int maxScore;
 	
-	public GoalLine(Point2D pointA, Point2D pointB) {
+	public final int playerNum;
+	
+	private int score = 0;
+	private Color color = INITIAL_COLOR;
+	
+	public GoalLine(int playerNum, int maxScore, Point2D pointA, Point2D pointB) {
+		this.playerNum = playerNum;
+		this.maxScore = maxScore;
 		line = new Line2D.Double(pointA, pointB);
 	}
 	
 	protected void onRender(Graphics2D g) {
 		g.setStroke(new BasicStroke(WIDTH));
-		g.setColor(COLOR);
+		g.setColor(color);
 		g.draw(line);
 	}
 	
 	public Shape getShape() {
 		return line;
+	}
+	
+	public void incrementScore() {
+		score++;
+		
+		if (score == maxScore) {
+			System.out.println("Player " + playerNum + " loses!!");
+		}
+		
+		color = getColorMix(INITIAL_COLOR, LOSING_COLOR, (double)(score+1)/maxScore);
+	}
+	
+	private static Color getColorMix(Color start, Color end, double mixRatio) {
+		return new Color(
+				getIntMix(start.getRed(),   end.getRed(),   mixRatio),
+				getIntMix(start.getGreen(), end.getGreen(), mixRatio),
+				getIntMix(start.getBlue(),  end.getBlue(),  mixRatio)
+			);
+	}
+	
+	private static int getIntMix(int start, int end, double mixRatio) {
+		int a =  (int)Math.round(start + (end - start)*mixRatio);
+		return a;
 	}
 }
