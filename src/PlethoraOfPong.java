@@ -16,29 +16,19 @@ import engine.Engine;
 public class PlethoraOfPong extends Engine {
 
 	// The name of the game.
-	private static final String NAME = "Plethora Of Pong";
+	private static final String NAME = "Plethora of Pong version 1.02";
 
 	// Predefined list of keys to assign to players.
 	private static final int[][] PLAYER_KEYS = {
-		{ KeyEvent.VK_1, KeyEvent.VK_2 },
-		{ KeyEvent.VK_9, KeyEvent.VK_0 },
-		{ KeyEvent.VK_Z, KeyEvent.VK_X },
-		{ KeyEvent.VK_N, KeyEvent.VK_M },
-		{ KeyEvent.VK_W, KeyEvent.VK_Q },
-		{ KeyEvent.VK_P, KeyEvent.VK_O },
-		{ KeyEvent.VK_V, KeyEvent.VK_C},
-		{ KeyEvent.VK_L, KeyEvent.VK_K },
-		{ KeyEvent.VK_4, KeyEvent.VK_3 },
-		{ KeyEvent.VK_8, KeyEvent.VK_7 },
-		{ KeyEvent.VK_S, KeyEvent.VK_A},
-		{ KeyEvent.VK_H, KeyEvent.VK_I },
-		{ KeyEvent.VK_D, KeyEvent.VK_F },
-		{ KeyEvent.VK_G, KeyEvent.VK_H },
-		{ KeyEvent.VK_5, KeyEvent.VK_6 },
-		{ KeyEvent.VK_E, KeyEvent.VK_R },
-		{ KeyEvent.VK_U, KeyEvent.VK_I },
-		{ KeyEvent.VK_T, KeyEvent.VK_Y },
-	};
+			{ KeyEvent.VK_1, KeyEvent.VK_2 }, { KeyEvent.VK_9, KeyEvent.VK_0 },
+			{ KeyEvent.VK_Z, KeyEvent.VK_X }, { KeyEvent.VK_N, KeyEvent.VK_M },
+			{ KeyEvent.VK_W, KeyEvent.VK_Q }, { KeyEvent.VK_P, KeyEvent.VK_O },
+			{ KeyEvent.VK_V, KeyEvent.VK_C }, { KeyEvent.VK_L, KeyEvent.VK_K },
+			{ KeyEvent.VK_4, KeyEvent.VK_3 }, { KeyEvent.VK_8, KeyEvent.VK_7 },
+			{ KeyEvent.VK_S, KeyEvent.VK_A }, { KeyEvent.VK_H, KeyEvent.VK_I },
+			{ KeyEvent.VK_D, KeyEvent.VK_F }, { KeyEvent.VK_G, KeyEvent.VK_H },
+			{ KeyEvent.VK_5, KeyEvent.VK_6 }, { KeyEvent.VK_E, KeyEvent.VK_R },
+			{ KeyEvent.VK_U, KeyEvent.VK_I }, { KeyEvent.VK_T, KeyEvent.VK_Y }, };
 
 	/**
 	 * The number of seconds to delay the game in between points.
@@ -88,7 +78,7 @@ public class PlethoraOfPong extends Engine {
 		this.nBalls = nBalls;
 
 		balls = new Ball[nBalls];
-		
+
 		System.out.println("Starting a " + nPlayers + " player game.");
 
 		// Initialize the game
@@ -187,20 +177,20 @@ public class PlethoraOfPong extends Engine {
 			for (final Ball ball : balls) {
 				collisionEngine.addListener(paddles[i], ball,
 						new engine.events.Listener() {
-	
+
 							@Override
 							public boolean handle(EventObject e_) {
 								CollisionEngine.CollisionEvent e = (CollisionEvent) e_;
-	
+
 								soundEngine.playSound("chirp.wav");
 								ball.onCollidePaddle((Paddle) e.getSource());
 								return false;
 							}
 						});
-	
+
 				collisionEngine.addListener(goalLines[i], ball,
 						new engine.events.Listener() {
-	
+
 							@Override
 							public boolean handle(EventObject e_) {
 								CollisionEngine.CollisionEvent e = (CollisionEvent) e_;
@@ -239,7 +229,9 @@ public class PlethoraOfPong extends Engine {
 		int nBalls = 0;
 
 		while (nPlayers < 2) {
-			input = JOptionPane.showInputDialog("Input the number of players:");
+			input = JOptionPane.showInputDialog(null,
+					"Input the number of players:", NAME,
+					JOptionPane.PLAIN_MESSAGE);
 
 			try {
 				nPlayers = Integer.parseInt(input);
@@ -249,7 +241,9 @@ public class PlethoraOfPong extends Engine {
 		}
 
 		while (nBalls < 1) {
-			input = JOptionPane.showInputDialog("Input the number of balls:");
+			input = JOptionPane.showInputDialog(null,
+					"Input the number of balls:", NAME,
+					JOptionPane.PLAIN_MESSAGE);
 
 			try {
 				nBalls = Integer.parseInt(input);
