@@ -13,7 +13,7 @@ public class GoalLine extends GameObject {
 	private static final Color INITIAL_COLOR = Color.GREEN;
 	private static final Color LOSING_COLOR  = Color.RED;
 	
-	private static final float WIDTH = 0.005f;
+	private static final float WIDTH = 0.05f;
 	
 	private final Line2D line;
 	private final int maxScore;

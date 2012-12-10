@@ -33,7 +33,10 @@ public class SoundEngine {
 	 *            The name of the sound clip.
 	 */
 	public void playSound(String name) {
-		getClip(name).start();
+		Clip clip = getClip(name);
+		clip.stop();
+		clip.setFramePosition(0);
+		clip.start();
 	}
 
 	/**
@@ -48,8 +51,8 @@ public class SoundEngine {
 		Clip clip;
 		if ((clip = clipCache.get(name)) == null) {
 			clip = loadClip(name);
+			clipCache.put(name, clip);
 		}
-
 		return clip;
 	}
 

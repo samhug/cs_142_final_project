@@ -33,7 +33,8 @@ public class Window extends JFrame {
 		mainPanel = new WindowPanel(this, width, height);
 		mainPanel.setBackground(new Color(0, 0, 0, 255));
 
-		updateCordinateSystem();
+		//updateCordinateSystem();
+		transform = new AffineTransform();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -49,6 +50,8 @@ public class Window extends JFrame {
 	private void updateCordinateSystem() {
 		Dimension size = this.mainPanel.getSize();
 
+		//System.out.println(size.width/size.height);
+		
 		// Modify the coordinate system
 		transform = new AffineTransform();
 

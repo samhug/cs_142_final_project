@@ -14,17 +14,17 @@ public class Paddle extends GameObject {
 
 	private final static Color PADDLE_COLOR = Color.BLUE;
 
-	private final static double INITIAL_VELOCITY = 3;
+	private final static double INITIAL_VELOCITY = 6;
 
 	// The size of the game paddle
-	final static double WIDTH = 2.5;
+	final static double WIDTH = 3;
 	final static double THICKNESS = 0.3;
 
 	/**
 	 * The key that moves the paddle in the direction of `boundaryA`
 	 */
 	private final int keyCodeA;
-	
+
 	/**
 	 * The key that moves the paddle in the direction of `boundaryB`
 	 */
@@ -53,7 +53,7 @@ public class Paddle extends GameObject {
 		this.trajectoryA = Math.atan2(
 				this.boundaryB.getY() - this.boundaryA.getY(),
 				this.boundaryB.getX() - this.boundaryA.getX());
-		
+
 		// Calculate the angle of the line boundaryB, boundaryA
 		this.trajectoryB = (this.trajectoryA + Math.PI) % (2 * Math.PI);
 
@@ -111,7 +111,7 @@ public class Paddle extends GameObject {
 		private Shape shape;
 
 		public PaddleSprite(double width, double height) {
-			shape = new Rectangle2D.Double(-width / 2, -height / 2, width,
+			shape = new Rectangle2D.Double(-0.9 * width, -height / 2, width,
 					height);
 			shape = rotateTransform.createTransformedShape(shape);
 		}
